@@ -17,6 +17,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.sounds.SoundEvent;
@@ -26,6 +27,7 @@ import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class InfernoHogEntity extends Monster {
 	private final ServerBossEvent bossInfo = new ServerBossEvent(this.getDisplayName(), ServerBossEvent.BossBarColor.PINK, ServerBossEvent.BossBarOverlay.PROGRESS);
@@ -87,9 +89,18 @@ public class InfernoHogEntity extends Monster {
 	public boolean hurtServer(ServerLevel level, DamageSource damagesource, float amount) {
 		if (damagesource.is(DamageTypes.IN_FIRE))
 			return false;
+		if (damagesource.is(DamageTypes.ON_FIRE))
+			return false;
+		if (damagesource.is(DamageTypes.LAVA))
+			return false;
 		if (damagesource.is(DamageTypes.FALL))
 			return false;
 		return super.hurtServer(level, damagesource, amount);
+	}
+
+	@Override
+	public boolean fireImmune() {
+		return true;
 	}
 
 	@Override
@@ -108,6 +119,13 @@ public class InfernoHogEntity extends Monster {
 	public void customServerAiStep(ServerLevel serverLevel) {
 		super.customServerAiStep(serverLevel);
 		this.bossInfo.setProgress(this.getHealth() / this.getMaxHealth());
+		LivingEntity target = this.getTarget();
+		if (target != null && target.isAlive() && this.getRandom().nextFloat() < 0.03f) {
+			Vec3 direction = target.getEyePosition().subtract(this.getX(), this.getEyeY(), this.getZ()).normalize();
+			SmallFireball smallFireball = new SmallFireball(serverLevel, this, direction);
+			smallFireball.setPos(this.getX(), this.getEyeY() - 0.1, this.getZ());
+			serverLevel.addFreshEntity(smallFireball);
+		}
 	}
 
 	@Override
