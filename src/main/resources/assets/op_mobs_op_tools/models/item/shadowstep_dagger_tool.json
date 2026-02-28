@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "op_mobs_op_tools:item/resized_22"
+  }
+}

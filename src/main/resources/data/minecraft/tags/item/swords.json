@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "op_mobs_op_tools:blazing_tusk_blade_tool",
+    "op_mobs_op_tools:shadowstep_dagger_tool",
+    "op_mobs_op_tools:earth_breaker_hammer_tool",
+    "op_mobs_op_tools:reaper_scythe_tool",
+    "op_mobs_op_tools:wolf_reaper_tool"
+  ]
+}

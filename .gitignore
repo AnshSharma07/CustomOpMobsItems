@@ -1,0 +1,19 @@
+# Gradle
+.gradle/
+build/
+
+# Run folder
+run/
+
+# MCreator
+.mcreator/
+
+# IntelliJ
+.idea/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

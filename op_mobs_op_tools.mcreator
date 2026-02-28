@@ -1,0 +1,250 @@
+{
+  "mod_elements": [
+    {
+      "name": "InfernoHog",
+      "type": "livingentity",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "inferno_hog",
+      "metadata": {
+        "files": [
+          "src/main/java/net/mcreator/opmobsoptools/client/renderer/InfernoHogRenderer.java",
+          "src/main/java/net/mcreator/opmobsoptools/entity/InfernoHogEntity.java",
+          "src/main/resources/assets/op_mobs_op_tools/items/inferno_hog_spawn_egg.json",
+          "src/main/resources/assets/op_mobs_op_tools/models/item/inferno_hog_spawn_egg.json"
+        ]
+      }
+    },
+    {
+      "name": "BlazingTuskBladeTool",
+      "type": "tool",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "blazing_tusk_blade_tool",
+      "metadata": {
+        "files": [
+          "src/main/resources/assets/op_mobs_op_tools/models/item/blazing_tusk_blade_tool.json",
+          "src/main/java/net/mcreator/opmobsoptools/item/BlazingTuskBladeToolItem.java",
+          "src/main/resources/assets/op_mobs_op_tools/items/blazing_tusk_blade_tool.json"
+        ]
+      }
+    },
+    {
+      "name": "WolfReaperTool",
+      "type": "tool",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "wolf_reaper_tool",
+      "metadata": {
+        "files": [
+          "src/main/resources/assets/op_mobs_op_tools/items/wolf_reaper_tool.json",
+          "src/main/java/net/mcreator/opmobsoptools/item/WolfReaperToolItem.java",
+          "src/main/resources/assets/op_mobs_op_tools/models/item/wolf_reaper_tool.json"
+        ]
+      }
+    },
+    {
+      "name": "EarthBreakerHammerTool",
+      "type": "tool",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "earth_breaker_hammer_tool",
+      "metadata": {
+        "files": [
+          "src/main/resources/assets/op_mobs_op_tools/models/item/earth_breaker_hammer_tool.json",
+          "src/main/java/net/mcreator/opmobsoptools/item/EarthBreakerHammerToolItem.java",
+          "src/main/resources/assets/op_mobs_op_tools/items/earth_breaker_hammer_tool.json"
+        ]
+      }
+    },
+    {
+      "name": "ShadowstepDaggerTool",
+      "type": "tool",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "shadowstep_dagger_tool",
+      "metadata": {
+        "files": [
+          "src/main/java/net/mcreator/opmobsoptools/item/ShadowstepDaggerToolItem.java",
+          "src/main/resources/assets/op_mobs_op_tools/items/shadowstep_dagger_tool.json",
+          "src/main/resources/assets/op_mobs_op_tools/models/item/shadowstep_dagger_tool.json"
+        ]
+      }
+    },
+    {
+      "name": "ReaperScytheTool",
+      "type": "tool",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "reaper_scythe_tool",
+      "metadata": {
+        "files": [
+          "src/main/java/net/mcreator/opmobsoptools/item/ReaperScytheToolItem.java",
+          "src/main/resources/assets/op_mobs_op_tools/models/item/reaper_scythe_tool.json",
+          "src/main/resources/assets/op_mobs_op_tools/items/reaper_scythe_tool.json"
+        ]
+      }
+    },
+    {
+      "name": "EnderSpider",
+      "type": "livingentity",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "ender_spider",
+      "metadata": {
+        "files": [
+          "src/main/java/net/mcreator/opmobsoptools/client/renderer/EnderSpiderRenderer.java",
+          "src/main/resources/assets/op_mobs_op_tools/models/item/ender_spider_spawn_egg.json",
+          "src/main/java/net/mcreator/opmobsoptools/entity/EnderSpiderEntity.java",
+          "src/main/resources/assets/op_mobs_op_tools/items/ender_spider_spawn_egg.json"
+        ]
+      }
+    },
+    {
+      "name": "HellJammerCow",
+      "type": "livingentity",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "hell_jammer_cow",
+      "metadata": {
+        "files": [
+          "src/main/java/net/mcreator/opmobsoptools/client/renderer/HellJammerCowRenderer.java",
+          "src/main/resources/assets/op_mobs_op_tools/items/hell_jammer_cow_spawn_egg.json",
+          "src/main/resources/assets/op_mobs_op_tools/models/item/hell_jammer_cow_spawn_egg.json",
+          "src/main/java/net/mcreator/opmobsoptools/entity/HellJammerCowEntity.java"
+        ]
+      }
+    },
+    {
+      "name": "ReaperZombie",
+      "type": "livingentity",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "reaper_zombie",
+      "metadata": {
+        "files": [
+          "src/main/resources/assets/op_mobs_op_tools/items/reaper_zombie_spawn_egg.json",
+          "src/main/java/net/mcreator/opmobsoptools/client/renderer/ReaperZombieRenderer.java",
+          "src/main/resources/assets/op_mobs_op_tools/models/item/reaper_zombie_spawn_egg.json",
+          "src/main/java/net/mcreator/opmobsoptools/entity/ReaperZombieEntity.java"
+        ]
+      }
+    },
+    {
+      "name": "MythicWolf",
+      "type": "livingentity",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "mythic_wolf",
+      "metadata": {
+        "files": [
+          "src/main/java/net/mcreator/opmobsoptools/entity/MythicWolfEntity.java",
+          "src/main/java/net/mcreator/opmobsoptools/client/renderer/MythicWolfRenderer.java",
+          "src/main/resources/assets/op_mobs_op_tools/models/item/mythic_wolf_spawn_egg.json",
+          "src/main/resources/assets/op_mobs_op_tools/items/mythic_wolf_spawn_egg.json"
+        ]
+      }
+    }
+  ],
+  "variable_elements": [],
+  "sound_elements": [
+    {
+      "name": "infernodeath",
+      "files": [
+        "mix_05s_audio-joiner.com_2"
+      ],
+      "category": "neutral",
+      "subtitle": "Interno Dies!"
+    },
+    {
+      "name": "zombiegrowl",
+      "files": [
+        "zombie_growling_effects_-_soundeffects_128k"
+      ],
+      "category": "neutral",
+      "subtitle": "Zombie Growls!"
+    }
+  ],
+  "tag_elements": {
+    "ITEMS:minecraft:swords": [
+      "~CUSTOM:ReaperScytheTool",
+      "~CUSTOM:ShadowstepDaggerTool",
+      "~CUSTOM:EarthBreakerHammerTool",
+      "~CUSTOM:WolfReaperTool",
+      "~CUSTOM:BlazingTuskBladeTool"
+    ]
+  },
+  "tab_element_order": {},
+  "language_map": {
+    "en_us": {
+      "subtitles.infernodeath": "Interno Dies!",
+      "entity.op_mobs_op_tools.inferno_hog": "Inferno Hog",
+      "item.op_mobs_op_tools.inferno_hog_spawn_egg": "Inferno Hog Spawn Egg",
+      "item.op_mobs_op_tools.blazing_tusk_blade_tool": "Blazing Tusk Blade",
+      "item.op_mobs_op_tools.wolf_reaper_tool": "Wolf Reaper ",
+      "item.op_mobs_op_tools.earth_breaker_hammer_tool": "Earth Breaker Hammer ",
+      "item.op_mobs_op_tools.shadowstep_dagger_tool": "Shadowstep Dagger",
+      "item.op_mobs_op_tools.reaper_scythe_tool": "Reaper Scythe ",
+      "item.op_mobs_op_tools.ender_spider_spawn_egg": "Ender Spider Spawn Egg",
+      "entity.op_mobs_op_tools.ender_spider": "Ender Spider",
+      "entity.op_mobs_op_tools.hell_jammer_cow": "Hell Jammer Cow",
+      "item.op_mobs_op_tools.hell_jammer_cow_spawn_egg": "Hell Jammer Cow Spawn Egg",
+      "item.op_mobs_op_tools.reaper_zombie_spawn_egg": "Reaper Zombie Spawn Egg",
+      "entity.op_mobs_op_tools.reaper_zombie": "Reaper Zombie",
+      "subtitles.zombiegrowl": "Zombie Growls!",
+      "entity.op_mobs_op_tools.mythic_wolf": "Mythic Wolf",
+      "item.op_mobs_op_tools.mythic_wolf_spawn_egg": "Mythic Wolf Spawn Egg"
+    }
+  },
+  "metadata": {
+    "files": [
+      "src/main/java/net/mcreator/opmobsoptools/init/OpMobsOpToolsModItems.java",
+      "src/main/java/net/mcreator/opmobsoptools/mixin/RepairItemRecipeMixin.java",
+      "src/main/java/net/mcreator/opmobsoptools/mixin/ServerPlayerMixin.java",
+      "src/main/java/net/mcreator/opmobsoptools/init/OpMobsOpToolsModEntities.java",
+      "src/main/java/net/mcreator/opmobsoptools/init/OpMobsOpToolsModEntityRenderers.java",
+      "src/main/java/net/mcreator/opmobsoptools/mixin/ItemStackMixin.java",
+      "src/main/resources/op_mobs_op_tools.mixins.json",
+      "src/main/java/net/mcreator/opmobsoptools/event/BlockEvents.java",
+      "src/main/java/net/mcreator/opmobsoptools/event/ItemEvents.java",
+      "src/main/resources/assets/op_mobs_op_tools/sounds.json",
+      "src/main/java/net/mcreator/opmobsoptools/mixin/BoneMealItemMixin.java",
+      "src/main/resources/fabric.mod.json",
+      "src/main/java/net/mcreator/opmobsoptools/event/LivingEntityEvents.java",
+      "src/main/java/net/mcreator/opmobsoptools/mixin/BlockItemMixin.java",
+      "src/main/java/net/mcreator/opmobsoptools/init/OpMobsOpToolsModSounds.java",
+      "src/main/java/net/mcreator/opmobsoptools/event/PlayerEvents.java",
+      "src/main/java/net/mcreator/opmobsoptools/init/OpMobsOpToolsModTabs.java",
+      "src/main/java/net/mcreator/opmobsoptools/mixin/LivingEntityMixin.java",
+      "src/main/java/net/mcreator/opmobsoptools/mixin/CommandsMixin.java",
+      "src/main/java/net/mcreator/opmobsoptools/mixin/ExperienceOrbMixin.java",
+      "src/main/java/net/mcreator/opmobsoptools/mixin/PlayerMixin.java",
+      "src/main/java/net/mcreator/opmobsoptools/init/OpMobsOpToolsModModels.java",
+      "src/main/java/net/mcreator/opmobsoptools/event/MiscEvents.java",
+      "src/main/java/net/mcreator/opmobsoptools/OpMobsOpToolsModClient.java",
+      "src/main/resources/META-INF/op_mobs_op_tools.accesswidener",
+      "src/main/java/net/mcreator/opmobsoptools/OpMobsOpToolsMod.java",
+      "src/main/resources/pack.mcmeta"
+    ]
+  },
+  "foldersRoot": {
+    "name": "~",
+    "children": []
+  },
+  "workspaceSettings": {
+    "modid": "op_mobs_op_tools",
+    "modName": "Op Mobs Op Tools",
+    "version": "1.0.0",
+    "author": "MCreator",
+    "websiteURL": "https://mcreator.net",
+    "license": "Not specified",
+    "serverSideOnly": false,
+    "requiredMods": [],
+    "dependencies": [],
+    "dependants": [],
+    "mcreatorDependencies": [],
+    "currentGenerator": "fabric-1.21.8",
+    "modElementsPackage": "net.mcreator.opmobsoptools"
+  },
+  "mcreatorVersion": 202500345720
+}

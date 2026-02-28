@@ -1,0 +1,20 @@
+{
+  "infernodeath": {
+    "subtitle": "subtitles.infernodeath",
+    "sounds": [
+      {
+        "name": "op_mobs_op_tools:mix_05s_audio-joiner.com_2",
+        "stream": false
+      }
+    ]
+  },
+  "zombiegrowl": {
+    "subtitle": "subtitles.zombiegrowl",
+    "sounds": [
+      {
+        "name": "op_mobs_op_tools:zombie_growling_effects_-_soundeffects_128k",
+        "stream": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "op_mobs_op_tools:item/29-298332_drawn-grim-reaper-scythe-cool-grim-reaper-scythe-removebg-preview"
+  }
+}

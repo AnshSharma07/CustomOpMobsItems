@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "package": "net.mcreator.opmobsoptools.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "op_mobs_op_tools.refmap.json",
+  "mixins": [
+    "RepairItemRecipeMixin",
+    "ServerPlayerMixin",
+    "LivingEntityMixin",
+    "PlayerMixin",
+    "ItemStackMixin",
+    "BlockItemMixin",
+    "BoneMealItemMixin",
+    "CommandsMixin",
+    "ExperienceOrbMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8.4"
+}
