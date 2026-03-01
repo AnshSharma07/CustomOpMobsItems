@@ -1,6 +1,9 @@
 package net.mcreator.opmobsoptools.entity;
 
+import net.mcreator.opmobsoptools.init.OpMobsOpToolsModItems;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -13,6 +16,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.damagesource.DamageSource;
@@ -22,10 +26,16 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public class HellJammerCowEntity extends Monster {
 	private final ServerBossEvent bossInfo = new ServerBossEvent(this.getDisplayName(), ServerBossEvent.BossBarColor.PINK, ServerBossEvent.BossBarOverlay.PROGRESS);
+	private int specialCooldown;
+	private boolean isLeaping;
+	private int leapTicks;
 
 	public HellJammerCowEntity(EntityType<HellJammerCowEntity> type, Level world) {
 		super(type, world);
@@ -76,6 +86,26 @@ public class HellJammerCowEntity extends Monster {
 	}
 
 	@Override
+	public boolean doHurtTarget(ServerLevel serverLevel, Entity entity) {
+		boolean hit = super.doHurtTarget(serverLevel, entity);
+		if (hit && entity instanceof LivingEntity livingEntity) {
+			double deltaX = livingEntity.getX() - this.getX();
+			double deltaZ = livingEntity.getZ() - this.getZ();
+			double horizontal = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
+			if (horizontal > 1.0E-4) {
+				double strength = 0.65;
+				livingEntity.push(deltaX / horizontal * strength, 0.25, deltaZ / horizontal * strength);
+				livingEntity.hurtMarked = true;
+			}
+		}
+		return hit;
+	}
+
+	public boolean causeFallDamage(float fallDistance, float multiplier, DamageSource source) {
+		return false;
+	}
+
+	@Override
 	public void startSeenByPlayer(ServerPlayer player) {
 		super.startSeenByPlayer(player);
 		this.bossInfo.addPlayer(player);
@@ -87,10 +117,86 @@ public class HellJammerCowEntity extends Monster {
 		this.bossInfo.removePlayer(player);
 	}
 
+	protected void dropCustomDeathLoot(ServerLevel serverLevel, DamageSource source, boolean recentlyHitIn) {
+		super.dropCustomDeathLoot(serverLevel, source, recentlyHitIn);
+		this.spawnAtLocation(serverLevel, new ItemStack(OpMobsOpToolsModItems.EARTH_BREAKER_HAMMER_TOOL));
+	}
+
 	@Override
 	public void customServerAiStep(ServerLevel serverLevel) {
 		super.customServerAiStep(serverLevel);
 		this.bossInfo.setProgress(this.getHealth() / this.getMaxHealth());
+
+		if (this.specialCooldown > 0)
+			this.specialCooldown--;
+
+		if (this.specialCooldown == 0 && !this.isLeaping) {
+			this.isLeaping = true;
+			this.leapTicks = 130;
+			this.specialCooldown = 400;
+			this.getNavigation().stop();
+			this.setDeltaMovement(this.getDeltaMovement().x, 1.35, this.getDeltaMovement().z);
+		}
+
+		if (this.isLeaping) {
+			this.getNavigation().stop();
+			float nextYaw = this.getYRot() + 28.0f;
+			this.setYRot(nextYaw);
+			this.setYBodyRot(nextYaw);
+			this.setYHeadRot(nextYaw);
+			serverLevel.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(0.5), this.getZ(), 8, 0.5, 0.2, 0.5, 0.01);
+
+			if (this.leapTicks <= 115 && this.leapTicks > 100) {
+				this.setDeltaMovement(Vec3.ZERO);
+			} else if (this.leapTicks <= 100) {
+				this.setDeltaMovement(this.getDeltaMovement().x * 0.1, -1.25, this.getDeltaMovement().z * 0.1);
+			}
+
+			this.leapTicks--;
+			if ((this.leapTicks <= 100 && this.onGround()) || this.leapTicks <= 0) {
+				this.performLeapSlam(serverLevel);
+			}
+		}
+	}
+
+	private void performLeapSlam(ServerLevel serverLevel) {
+		double attackDamage = this.getAttributeValue(Attributes.ATTACK_DAMAGE);
+		float slamDamage = (float) (attackDamage * 0.75);
+		AABB hitBox = this.getBoundingBox().inflate(4.0, 2.0, 4.0);
+		for (LivingEntity livingEntity : serverLevel.getEntitiesOfClass(LivingEntity.class, hitBox, entity -> entity != null && entity.isAlive() && entity != this)) {
+			livingEntity.hurtServer(serverLevel, this.damageSources().mobAttack(this), slamDamage);
+			double deltaX = livingEntity.getX() - this.getX();
+			double deltaZ = livingEntity.getZ() - this.getZ();
+			double horizontal = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
+			if (horizontal > 1.0E-4) {
+				double strength = 1.1;
+				livingEntity.push(deltaX / horizontal * strength, 0.45, deltaZ / horizontal * strength);
+				livingEntity.hurtMarked = true;
+			}
+		}
+
+		BlockPos center = this.blockPosition();
+		for (int x = -3; x <= 3; x++) {
+			for (int y = -1; y <= 1; y++) {
+				for (int z = -3; z <= 3; z++) {
+					if (x * x + z * z > 9)
+						continue;
+					BlockPos breakPos = center.offset(x, y, z);
+					BlockState state = serverLevel.getBlockState(breakPos);
+					if (state.isAir() || state.is(Blocks.BEDROCK) || state.is(Blocks.OBSIDIAN))
+						continue;
+					float hardness = state.getDestroySpeed(serverLevel, breakPos);
+					if (hardness >= 0.0f && hardness < 10.0f) {
+						serverLevel.destroyBlock(breakPos, true, this);
+					}
+				}
+			}
+		}
+
+		serverLevel.sendParticles(ParticleTypes.POOF, this.getX(), this.getY(0.1), this.getZ(), 80, 2.5, 0.4, 2.5, 0.04);
+		serverLevel.sendParticles(ParticleTypes.LARGE_SMOKE, this.getX(), this.getY(0.1), this.getZ(), 50, 2.0, 0.3, 2.0, 0.02);
+		this.isLeaping = false;
+		this.leapTicks = 0;
 	}
 
 	@Override
