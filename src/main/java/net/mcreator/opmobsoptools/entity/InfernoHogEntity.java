@@ -17,6 +17,8 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.projectile.SmallFireball;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.sounds.SoundEvent;
@@ -26,9 +28,15 @@ import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.AABB;
 
 public class InfernoHogEntity extends Monster {
 	private final ServerBossEvent bossInfo = new ServerBossEvent(this.getDisplayName(), ServerBossEvent.BossBarColor.PINK, ServerBossEvent.BossBarOverlay.PROGRESS);
+	private int fireballCooldown;
+	private int specialCooldown;
+	private int spinningTicks;
+	private boolean isSpinning;
 
 	public InfernoHogEntity(EntityType<InfernoHogEntity> type, Level world) {
 		super(type, world);
@@ -87,9 +95,20 @@ public class InfernoHogEntity extends Monster {
 	public boolean hurtServer(ServerLevel level, DamageSource damagesource, float amount) {
 		if (damagesource.is(DamageTypes.IN_FIRE))
 			return false;
+		if (damagesource.is(DamageTypes.ON_FIRE))
+			return false;
+		if (damagesource.is(DamageTypes.LAVA))
+			return false;
 		if (damagesource.is(DamageTypes.FALL))
 			return false;
+		if (damagesource.is(DamageTypes.EXPLOSION) || damagesource.is(DamageTypes.PLAYER_EXPLOSION))
+			return false;
 		return super.hurtServer(level, damagesource, amount);
+	}
+
+	@Override
+	public boolean fireImmune() {
+		return true;
 	}
 
 	@Override
@@ -108,6 +127,51 @@ public class InfernoHogEntity extends Monster {
 	public void customServerAiStep(ServerLevel serverLevel) {
 		super.customServerAiStep(serverLevel);
 		this.bossInfo.setProgress(this.getHealth() / this.getMaxHealth());
+
+		if (this.fireballCooldown > 0)
+			this.fireballCooldown--;
+		if (this.specialCooldown > 0)
+			this.specialCooldown--;
+
+		LivingEntity target = this.getTarget();
+		if (target != null && target.isAlive() && this.fireballCooldown == 0) {
+			Vec3 direction = target.getEyePosition().subtract(this.getX(), this.getEyeY(), this.getZ()).normalize();
+			SmallFireball smallFireball = new SmallFireball(serverLevel, this, direction);
+			smallFireball.setPos(this.getX(), this.getEyeY() - 0.1, this.getZ());
+			serverLevel.addFreshEntity(smallFireball);
+			target.setRemainingFireTicks(Math.max(target.getRemainingFireTicks(), 100));
+			this.fireballCooldown = 300;
+		}
+
+		if (this.specialCooldown == 0 && !this.isSpinning) {
+			this.isSpinning = true;
+			this.spinningTicks = 100;
+			this.specialCooldown = 400;
+		}
+
+		if (this.isSpinning) {
+			this.setDeltaMovement(Vec3.ZERO);
+			this.getNavigation().stop();
+			float nextYaw = this.getYRot() + 35.0f;
+			this.setYRot(nextYaw);
+			this.setYBodyRot(nextYaw);
+			this.setYHeadRot(nextYaw);
+			serverLevel.sendParticles(ParticleTypes.FLAME, this.getX(), this.getY(0.5), this.getZ(), 12, 0.8, 0.2, 0.8, 0.01);
+
+			this.spinningTicks--;
+			if (this.spinningTicks <= 0) {
+				AABB blastArea = this.getBoundingBox().inflate(8.0);
+				for (LivingEntity livingEntity : serverLevel.getEntitiesOfClass(LivingEntity.class, blastArea,
+						entity -> entity != null && entity.isAlive() && entity != this)) {
+					livingEntity.hurtServer(serverLevel, this.damageSources().explosion(this, this), 16.0f);
+				}
+
+				serverLevel.explode(this, this.getX(), this.getY(0.5), this.getZ(), 8.0f, Level.ExplosionInteraction.NONE);
+				serverLevel.sendParticles(ParticleTypes.FLAME, this.getX(), this.getY(0.5), this.getZ(), 80, 1.8, 0.7, 1.8, 0.02);
+				this.isSpinning = false;
+				this.spinningTicks = 0;
+			}
+		}
 	}
 
 	@Override
