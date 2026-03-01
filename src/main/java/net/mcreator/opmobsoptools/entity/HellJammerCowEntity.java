@@ -99,7 +99,6 @@ public class HellJammerCowEntity extends Monster {
 		return hit;
 	}
 
-	@Override
 	public boolean causeFallDamage(float fallDistance, float multiplier, DamageSource source) {
 		return false;
 	}
