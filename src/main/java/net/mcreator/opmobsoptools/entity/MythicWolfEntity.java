@@ -1,5 +1,8 @@
 package net.mcreator.opmobsoptools.entity;
 
+import net.minecraft.world.item.ItemStack;
+import net.mcreator.opmobsoptools.init.OpMobsOpToolsModItems;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.entity.monster.Monster;
@@ -63,6 +66,10 @@ public class MythicWolfEntity extends Monster {
 		this.playSound(BuiltInRegistries.SOUND_EVENT.getValue(ResourceLocation.parse("entity.wolf.step")), 0.15f, 1);
 	}
 
+	protected void dropCustomDeathLoot(ServerLevel serverLevel, DamageSource source, boolean recentlyHitIn) {
+		super.dropCustomDeathLoot(serverLevel, source, recentlyHitIn);
+		this.spawnAtLocation(serverLevel, new ItemStack(OpMobsOpToolsModItems.WOLF_REAPER_TOOL));
+	}
 	@Override
 	public SoundEvent getHurtSound(DamageSource ds) {
 		return BuiltInRegistries.SOUND_EVENT.getValue(ResourceLocation.parse("entity.wolf_angry.hurt"));

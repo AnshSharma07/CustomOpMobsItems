@@ -1,5 +1,7 @@
 package net.mcreator.opmobsoptools.entity;
 
+import net.mcreator.opmobsoptools.init.OpMobsOpToolsModItems;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.Level;
@@ -99,7 +101,6 @@ public class HellJammerCowEntity extends Monster {
 		return hit;
 	}
 
-	@Override
 	public boolean causeFallDamage(float fallDistance, float multiplier, DamageSource source) {
 		return false;
 	}
@@ -114,6 +115,11 @@ public class HellJammerCowEntity extends Monster {
 	public void stopSeenByPlayer(ServerPlayer player) {
 		super.stopSeenByPlayer(player);
 		this.bossInfo.removePlayer(player);
+	}
+
+	protected void dropCustomDeathLoot(ServerLevel serverLevel, DamageSource source, boolean recentlyHitIn) {
+		super.dropCustomDeathLoot(serverLevel, source, recentlyHitIn);
+		this.spawnAtLocation(serverLevel, new ItemStack(OpMobsOpToolsModItems.EARTH_BREAKER_HAMMER_TOOL));
 	}
 
 	@Override

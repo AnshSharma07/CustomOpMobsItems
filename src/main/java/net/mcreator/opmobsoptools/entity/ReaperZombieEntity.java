@@ -1,5 +1,8 @@
 package net.mcreator.opmobsoptools.entity;
 
+import net.mcreator.opmobsoptools.init.OpMobsOpToolsModItems;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.level.block.state.BlockState;
@@ -75,6 +78,11 @@ public class ReaperZombieEntity extends Monster {
 	@Override
 	public SoundEvent getAmbientSound() {
 		return BuiltInRegistries.SOUND_EVENT.getValue(ResourceLocation.parse("op_mobs_op_tools:zombiegrowl"));
+	}
+
+	protected void dropCustomDeathLoot(ServerLevel serverLevel, DamageSource source, boolean recentlyHitIn) {
+		super.dropCustomDeathLoot(serverLevel, source, recentlyHitIn);
+		this.spawnAtLocation(serverLevel, new ItemStack(OpMobsOpToolsModItems.REAPER_SCYTHE_TOOL));
 	}
 
 	@Override

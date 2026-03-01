@@ -1,5 +1,7 @@
 package net.mcreator.opmobsoptools.entity;
 
+import net.mcreator.opmobsoptools.init.OpMobsOpToolsModItems;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.Level;
@@ -91,6 +93,7 @@ public class EnderSpiderEntity extends Monster {
 		return BuiltInRegistries.SOUND_EVENT.getValue(ResourceLocation.parse("op_mobs_op_tools:infernodeath"));
 	}
 
+
 	@Override
 	public boolean doHurtTarget(ServerLevel serverLevel, Entity entity) {
 		if (this.isClone)
@@ -108,9 +111,8 @@ public class EnderSpiderEntity extends Monster {
 	}
 
 	protected void dropCustomDeathLoot(ServerLevel serverLevel, DamageSource source, boolean recentlyHitIn) {
-		if (this.isClone)
-			return;
 		super.dropCustomDeathLoot(serverLevel, source, recentlyHitIn);
+		this.spawnAtLocation(serverLevel, new ItemStack(OpMobsOpToolsModItems.SHADOWSTEP_DAGGER_TOOL));
 	}
 
 	@Override

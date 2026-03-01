@@ -1,5 +1,6 @@
 package net.mcreator.opmobsoptools.entity;
 
+import net.mcreator.opmobsoptools.init.OpMobsOpToolsModItems;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.Level;
@@ -68,7 +69,7 @@ public class InfernoHogEntity extends Monster {
 
 	protected void dropCustomDeathLoot(ServerLevel serverLevel, DamageSource source, boolean recentlyHitIn) {
 		super.dropCustomDeathLoot(serverLevel, source, recentlyHitIn);
-		this.spawnAtLocation(serverLevel, new ItemStack(Blocks.STONE));
+		this.spawnAtLocation(serverLevel, new ItemStack(OpMobsOpToolsModItems.BLAZING_TUSK_BLADE_TOOL));
 	}
 
 	@Override
