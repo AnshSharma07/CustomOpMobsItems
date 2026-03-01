@@ -19,6 +19,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.server.level.ServerPlayer;
@@ -177,7 +178,9 @@ public class EnderSpiderEntity extends Monster {
 			BlockPos safePos = this.findSafeStandPos(serverLevel, clonePos);
 			if (safePos == null)
 				safePos = this.blockPosition();
-			clone.moveTo(safePos.getX() + 0.5, safePos.getY(), safePos.getZ() + 0.5, this.getYRot(), this.getXRot());
+			clone.setPos(safePos.getX() + 0.5, safePos.getY(), safePos.getZ() + 0.5);
+			clone.setYRot(this.getYRot());
+			clone.setXRot(this.getXRot());
 			clone.isClone = true;
 			clone.phaseTriggered = true;
 			clone.cloneCooldown = 200;
@@ -204,8 +207,8 @@ public class EnderSpiderEntity extends Monster {
 	}
 
 	private BlockPos findSafeStandPos(ServerLevel serverLevel, BlockPos around) {
-		int minY = serverLevel.getMinBuildHeight();
-		int maxY = serverLevel.getMaxBuildHeight() - 2;
+		int minY = serverLevel.getMinY();
+		int maxY = serverLevel.getMaxY() - 2;
 		int y = Math.max(minY + 1, Math.min(maxY, around.getY()));
 		for (int scan = 0; scan < 12; scan++) {
 			int checkY = Math.max(minY + 1, y - scan);
@@ -235,14 +238,18 @@ public class EnderSpiderEntity extends Monster {
 
 	private void summonPhaseTwoMinions(ServerLevel serverLevel) {
 		for (int i = 0; i < 4; i++) {
-			CaveSpider caveSpider = EntityType.CAVE_SPIDER.create(serverLevel);
+			CaveSpider caveSpider = EntityType.CAVE_SPIDER.create(serverLevel, EntitySpawnReason.MOB_SUMMONED);
 			if (caveSpider != null) {
-				caveSpider.moveTo(this.getX() + this.getRandom().nextDouble() * 4.0 - 2.0, this.getY(), this.getZ() + this.getRandom().nextDouble() * 4.0 - 2.0, this.getYRot(), 0.0f);
+				caveSpider.setPos(this.getX() + this.getRandom().nextDouble() * 4.0 - 2.0, this.getY(), this.getZ() + this.getRandom().nextDouble() * 4.0 - 2.0);
+				caveSpider.setYRot(this.getYRot());
+				caveSpider.setXRot(0.0f);
 				serverLevel.addFreshEntity(caveSpider);
 			}
-			Spider spider = EntityType.SPIDER.create(serverLevel);
+			Spider spider = EntityType.SPIDER.create(serverLevel, EntitySpawnReason.MOB_SUMMONED);
 			if (spider != null) {
-				spider.moveTo(this.getX() + this.getRandom().nextDouble() * 4.0 - 2.0, this.getY(), this.getZ() + this.getRandom().nextDouble() * 4.0 - 2.0, this.getYRot(), 0.0f);
+				spider.setPos(this.getX() + this.getRandom().nextDouble() * 4.0 - 2.0, this.getY(), this.getZ() + this.getRandom().nextDouble() * 4.0 - 2.0);
+				spider.setYRot(this.getYRot());
+				spider.setXRot(0.0f);
 				serverLevel.addFreshEntity(spider);
 			}
 		}
