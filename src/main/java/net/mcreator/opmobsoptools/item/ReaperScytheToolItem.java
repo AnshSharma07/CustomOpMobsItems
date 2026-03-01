@@ -4,7 +4,7 @@ import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,29 +27,29 @@ public class ReaperScytheToolItem extends Item {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+	public InteractionResult use(Level level, Player player, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
 		if (!(level instanceof ServerLevel serverLevel))
-			return InteractionResultHolder.success(stack);
-		if (player.getCooldowns().isOnCooldown(this))
-			return InteractionResultHolder.fail(stack);
+			return InteractionResult.SUCCESS;
+		if (player.getCooldowns().isOnCooldown(stack))
+			return InteractionResult.FAIL;
 
-		player.getCooldowns().addCooldown(this, 200);
+		player.getCooldowns().addCooldown(stack, 200);
 		serverLevel.playSound(null, player.blockPosition(), BuiltInRegistries.SOUND_EVENT.getValue(ResourceLocation.parse("block.sculk_shrieker.shriek")), SoundSource.PLAYERS, 1.3f, 1.0f);
 		for (LivingEntity entity : serverLevel.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(10.0), e -> e.isAlive() && !(e instanceof Player))) {
-			entity.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 100, 1));
-			serverLevel.sendParticles(ParticleTypes.SMOKE, entity.getX(), entity.getY(0.5), entity.getZ(), 8, 0.2, 0.2, 0.2, 0.01);
+			entity.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 120, 4));
+			serverLevel.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, entity.getX(), entity.getY(0.5), entity.getZ(), 8, 0.2, 0.2, 0.2, 0.01);
 		}
-		return InteractionResultHolder.success(stack);
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+	public void hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
 		if (attacker instanceof Player player) {
 			player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 60, 4));
-			target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 1));
+			target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 100, 1));
 			target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 100, 1));
 		}
-		return super.hurtEnemy(stack, target, attacker);
+		super.hurtEnemy(stack, target, attacker);
 	}
 }

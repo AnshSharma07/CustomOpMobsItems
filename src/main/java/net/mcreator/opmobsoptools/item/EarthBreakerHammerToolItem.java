@@ -4,7 +4,7 @@ import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,16 +27,16 @@ public class EarthBreakerHammerToolItem extends Item {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+	public InteractionResult use(Level level, Player player, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
 		if (!(level instanceof ServerLevel serverLevel))
-			return InteractionResultHolder.success(stack);
-		if (player.getCooldowns().isOnCooldown(this))
-			return InteractionResultHolder.fail(stack);
+			return InteractionResult.SUCCESS;
+		if (player.getCooldowns().isOnCooldown(stack))
+			return InteractionResult.FAIL;
 
-		player.getCooldowns().addCooldown(this, 600);
+		player.getCooldowns().addCooldown(stack, 600);
 		serverLevel.playSound(null, player.blockPosition(), BuiltInRegistries.SOUND_EVENT.getValue(ResourceLocation.parse("entity.warden.sonic_boom")), SoundSource.PLAYERS, 1.4f, 1.0f);
-		player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100, 4));
+		player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 160, 4));
 
 		for (LivingEntity entity : serverLevel.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(6.0), e -> e != player && e.isAlive())) {
 			entity.hurtServer(serverLevel, serverLevel.damageSources().playerAttack(player), 16.0f);
@@ -54,13 +54,13 @@ public class EarthBreakerHammerToolItem extends Item {
 				}
 			}
 		}
-		return InteractionResultHolder.success(stack);
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+	public void hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
 		if (attacker.level() instanceof ServerLevel serverLevel)
 			serverLevel.playSound(null, attacker.blockPosition(), BuiltInRegistries.SOUND_EVENT.getValue(ResourceLocation.parse("block.anvil.place")), SoundSource.PLAYERS, 1.0f, 1.0f);
-		return super.hurtEnemy(stack, target, attacker);
+		super.hurtEnemy(stack, target, attacker);
 	}
 }

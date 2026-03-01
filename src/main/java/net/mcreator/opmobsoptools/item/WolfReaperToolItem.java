@@ -4,7 +4,7 @@ import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,21 +31,21 @@ public class WolfReaperToolItem extends Item {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+	public InteractionResult use(Level level, Player player, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
 		if (!(level instanceof ServerLevel serverLevel))
-			return InteractionResultHolder.success(stack);
-		if (player.getCooldowns().isOnCooldown(this))
-			return InteractionResultHolder.fail(stack);
+			return InteractionResult.SUCCESS;
+		if (player.getCooldowns().isOnCooldown(stack))
+			return InteractionResult.FAIL;
 
-		player.getCooldowns().addCooldown(this, 600);
+		player.getCooldowns().addCooldown(stack, 600);
 		Wolf wolf = EntityType.WOLF.create(serverLevel, EntitySpawnReason.MOB_SUMMONED);
 		if (wolf != null) {
 			wolf.setPos(player.getX() + 1, player.getY(), player.getZ() + 1);
 			wolf.setOwner(player);
 			wolf.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH).setBaseValue(wolf.getMaxHealth() * 5.0);
 			wolf.setHealth((float) wolf.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH));
-			wolf.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 200, 0));
+			wolf.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 200, 0));
 			serverLevel.addFreshEntity(wolf);
 			serverLevel.playSound(null, player.blockPosition(), BuiltInRegistries.SOUND_EVENT.getValue(ResourceLocation.parse("entity.wolf.growl")), SoundSource.PLAYERS, 1.0f, 0.9f);
 			OpMobsOpToolsMod.queueServerWork(300, () -> {
@@ -53,11 +53,11 @@ public class WolfReaperToolItem extends Item {
 					wolf.discard();
 			});
 		}
-		return InteractionResultHolder.success(stack);
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+	public void hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
 		if (attacker.level() instanceof ServerLevel serverLevel && attacker instanceof Player player) {
 			for (int i = 0; i < 3; i++) {
 				Wolf wolf = EntityType.WOLF.create(serverLevel, EntitySpawnReason.MOB_SUMMONED);
@@ -65,7 +65,7 @@ public class WolfReaperToolItem extends Item {
 					continue;
 				wolf.setPos(target.getX() + (serverLevel.random.nextDouble() - 0.5) * 2.0, target.getY(), target.getZ() + (serverLevel.random.nextDouble() - 0.5) * 2.0);
 				wolf.setOwner(player);
-				wolf.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 40, 4));
+				wolf.addEffect(new MobEffectInstance(MobEffects.SPEED, 40, 4));
 				wolf.setTarget(target);
 				serverLevel.addFreshEntity(wolf);
 				OpMobsOpToolsMod.queueServerWork(40, () -> {
@@ -75,6 +75,6 @@ public class WolfReaperToolItem extends Item {
 			}
 			serverLevel.playSound(null, attacker.blockPosition(), BuiltInRegistries.SOUND_EVENT.getValue(ResourceLocation.parse("entity.wolf.growl")), SoundSource.PLAYERS, 1.0f, 1.0f);
 		}
-		return super.hurtEnemy(stack, target, attacker);
+		super.hurtEnemy(stack, target, attacker);
 	}
 }
